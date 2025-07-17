@@ -3,7 +3,7 @@ venv/
 # Ignore dataset folder
 data/
 # Byte-compiled / cache files
-__pycache__/
+backend/__pycache__/
 *.py[cod]
 # VSCode or IDE files
 .vscode/
