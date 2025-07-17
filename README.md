@@ -43,7 +43,7 @@ cd OpenData-Crimes
 ```
 
 #### 2. Décompresser le fichier ZIP
-
+Créer un dossier data et
 Décompresse le fichier `data/NYPD_Data.zip` pour obtenir le fichier CSV dans le dossier `data/`.
 
 ---
