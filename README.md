@@ -52,9 +52,14 @@ Décompresse le fichier `data/NYPD_Data.zip` pour obtenir le fichier CSV dans le
 
 #### 1. Activer l’environnement virtuel du backend
 
+créer un venv
+```bash
+python -m venv venv
+```
+
 ```bash
 cd backend
-source venv/Scripts/activate  # Sous Linux/macOS : source venv/bin/activate
+source ../venv/Scripts/activate  # Sous Linux/macOS : source venv/bin/activate
 ```
 
 #### 2. Installer les dépendances
