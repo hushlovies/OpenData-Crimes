@@ -52,15 +52,12 @@ Décompresse le fichier `data/NYPD_Data.zip` pour obtenir le fichier CSV dans le
 
 #### 1. Activer l’environnement virtuel du backend
 
-créer un venv
+créer un venv et activation
 ```bash
 python -m venv venv
+source  venv/Scripts/activate 
 ```
 
-```bash
-cd backend
-source ../venv/Scripts/activate  # Sous Linux/macOS : source venv/bin/activate
-```
 
 #### 2. Installer les dépendances
 
@@ -71,18 +68,19 @@ pip install -r requirements.txt
 #### 3. Charger le fichier CSV dans MongoDB
 
 ```bash
-python ../scripts/load_csv_to_mongo.py
+python scripts/load_csv_to_mongo.py
 ```
 
 #### 4. Créer les index MongoDB
 
 ```bash
-python ../scripts/create_indexes.py
+python scripts/create_idexes.py
 ```
 
 #### 5. Lancer le backend
 
 ```bash
+cd backend
 python app.py
 ```
 
@@ -94,20 +92,16 @@ Le serveur Flask démarre sur `http://127.0.0.1:5000/`
 
 #### 1. Activer l’environnement virtuel du frontend
 
+Ouvrir un autre terminal
+
 ```bash
-cd frontend
 source venv/Scripts/activate  # Sous Linux/macOS : source venv/bin/activate
-```
-
-#### 2. Installer les dépendances
-
-```bash
-pip install -r requirements.txt
 ```
 
 #### 3. Lancer l’application Streamlit
 
 ```bash
+cd frontend
 streamlit run app.py
 ```
 
