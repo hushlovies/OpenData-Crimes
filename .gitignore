@@ -1,0 +1,14 @@
+# Ignore virtual environments
+venv/
+# Ignore dataset folder
+data/
+# Byte-compiled / cache files
+backend/__pycache__/
+*.py[cod]
+# VSCode or IDE files
+.vscode/
+.idea/
+# Mac OS files
+.DS_Store
+# Logs or temp files
+*.log
