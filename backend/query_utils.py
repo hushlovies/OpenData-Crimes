@@ -56,58 +56,58 @@ def _filter_in(field: str, raw_vals):
 
 
 def build_query(args):
-    q = {}
+    structured_filters = []
 
     # ---------------- Base ----------------
     b = _csv(args.get("borough"))
     if b:
-        q["boro_nm"] = {"$in": b}
+        structured_filters.append({"boro_nm": {"$in": b}})
 
     o = _csv(args.get("ofns_desc"))
     if o:
-        q["ofns_desc"] = {"$in": o}
+        structured_filters.append({"ofns_desc": {"$in": o}})
 
     l = _csv(args.get("law_cat_cd"))
     if l:
-        q["law_cat_cd"] = {"$in": l}
+        structured_filters.append({"law_cat_cd": {"$in": l}})
 
     ca = _csv(args.get("crm_atpt_cptd_cd"))
     if ca:
-        q["crm_atpt_cptd_cd"] = {"$in": ca}
+        structured_filters.append({"crm_atpt_cptd_cd": {"$in": ca}})
 
     # ---------------- Victime ----------------
     vs_std = _csv(args.get("vic_sex"))  # F/M/U
     if vs_std:
         raw = _expand(SEX_STD_TO_RAW, vs_std)
         f = _filter_in("vic_sex", raw)
-        if f: q.update(f)
+        if f: structured_filters.append(f)
 
     va_std = _csv(args.get("vic_age"))  # 0-17, 18-24...
     if va_std:
         raw = _expand(AGE_STD_TO_RAW, va_std)
         f = _filter_in("vic_age_group", raw)
-        if f: q.update(f)
+        if f: structured_filters.append(f)
 
     vr = _csv(args.get("vic_race"))
     if vr:
-        q["vic_race"] = {"$in": vr}
+        structured_filters.append({"vic_race": {"$in": vr}})
 
     # ---------------- Suspect ----------------
     ss_std = _csv(args.get("susp_sex"))
     if ss_std:
         raw = _expand(SEX_STD_TO_RAW, ss_std)
         f = _filter_in("susp_sex", raw)
-        if f: q.update(f)
+        if f: structured_filters.append(f)
 
     sa_std = _csv(args.get("susp_age"))
     if sa_std:
         raw = _expand(AGE_STD_TO_RAW, sa_std)
         f = _filter_in("susp_age_group", raw)
-        if f: q.update(f)
+        if f: structured_filters.append(f)
 
     sr = _csv(args.get("susp_race"))
     if sr:
-        q["susp_race"] = {"$in": sr}
+        structured_filters.append({"susp_race": {"$in": sr}})
 
     # ---------------- Dates ----------------
     start = args.get("start")
@@ -116,13 +116,26 @@ def build_query(args):
         try:
             sd = datetime.strptime(start, "%Y-%m-%d")
             ed = datetime.strptime(end, "%Y-%m-%d")
-            q["cmplnt_fr_dt"] = {"$gte": sd, "$lte": ed}
+            structured_filters.append({
+                "cmplnt_fr_dt": {"$gte": sd, "$lte": ed}
+            })
         except Exception:
             pass
 
-    # ---------------- Texte ----------------
-    q_text = args.get("q")
+    # ---------------- Texte (recherche libre via $regex) ----------------
+    q_text = args.get("q", "").strip()
     if q_text:
-        q["$text"] = {"$search": q_text}
+        regex_filter = {"$regex": q_text, "$options": "i"}
+        structured_filters.append({
+            "$or": [
+                {"ofns_desc": regex_filter},
+                {"prem_typ_desc": regex_filter},
+                {"boro_nm": regex_filter}
+            ]
+        })
 
-    return q
+    # ---------------- Final Query ----------------
+    if structured_filters:
+        return {"$and": structured_filters}
+    else:
+        return {}
