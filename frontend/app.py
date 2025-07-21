@@ -1,7 +1,7 @@
 """
 frontend/app.py
 
-Explorateur Streamlit — Criminalité NYC
+Explorateur Streamlit — Plainte NYC
 - UI en français
 - Filtres Victime & Suspect (sexe, âge classes, race brute)
 - Plage de dates via calendrier
@@ -18,8 +18,8 @@ import datetime
 
 API_BASE = "http://localhost:5000"
 
-st.set_page_config(page_title="Explorateur Criminalité NYC", layout="wide")
-st.title("🔎 Explorateur de la criminalité à New York")
+st.set_page_config(page_title="Visualisation interactive des plaintes enregistrées par la NYPD", layout="wide")
+st.title("🔎 Visualisation interactive des plaintes enregistrées par la NYPD")
 
 # ------------------------------------------------------------------
 # Options normalisées (doivent refléter backend/normalization_maps.py)
@@ -115,7 +115,7 @@ with st.sidebar.form("filtres_form"):
     )
 
     crm_status = st.multiselect(
-        "Tentative / Réalisé",
+        "Statut de l'affaire",
         _vals("crm_atpt_cptd_cd"),
         default=st.session_state.filtres.get("crm_atpt_cptd_cd", "").split(",") if st.session_state.filtres.get("crm_atpt_cptd_cd") else []
     )
